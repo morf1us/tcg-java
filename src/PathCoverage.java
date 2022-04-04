@@ -11,9 +11,7 @@ public class PathCoverage extends AbstractCoverageProperty {
         super(ctx, constraints, input_variables, all_solutions, min, max);
     }
 
-    public List<List<String>> computeTestCases() {
-        List<String> vars = new ArrayList<>();
-
+    public void computeTestCases() {
         // prepare constraints
         removeObjective();
         removeABs();
@@ -31,8 +29,6 @@ public class PathCoverage extends AbstractCoverageProperty {
 
             HashMap<String, Expr> sat_model = new HashMap<>();
             for (FuncDecl cd : model.getConstDecls()) {
-                System.out.println(cd.toString());
-                System.out.println(model.getConstInterp(cd));
                 sat_model.put(cd.getName().toString(), model.getConstInterp(cd));
             }
             List<BoolExpr> negated_assignments = new ArrayList<>();
@@ -54,7 +50,5 @@ public class PathCoverage extends AbstractCoverageProperty {
 
             test_cases.add(stored_model);
         }
-
-        return test_cases;
     }
 }

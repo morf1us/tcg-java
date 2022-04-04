@@ -21,7 +21,7 @@ abstract class AbstractCoverageProperty {
 
     public AbstractCoverageProperty(Context ctx, List<BoolExpr> constraints, List<IntExpr> input_variables, boolean restrict_values, int min, int max) {
         this.ctx = ctx;
-        this.constraints = new ArrayList<BoolExpr>(constraints);
+        this.constraints = new ArrayList<>(constraints);
         this.input_variables = new ArrayList<>(input_variables);
         this.test_cases = new ArrayList<>();
         this.restrict_values = restrict_values;
@@ -68,5 +68,6 @@ abstract class AbstractCoverageProperty {
         }
     }
 
-    abstract List<List<String>> computeTestCases();
+    public List<List<String>> getTestCases() { return this.test_cases; }
+    abstract void computeTestCases();
 }

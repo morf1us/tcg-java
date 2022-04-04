@@ -105,11 +105,6 @@ public class InputParser {
             System.exit(0);
         }
 
-        System.out.println("number of input variables:");
-        System.out.println(vars.size());
-        for (IntExpr input_var : vars) {
-            System.out.println(input_var.toString());
-        }
         return vars;
     }
     
