@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InputParser input_parser = new InputParser(args, ctx);
+        InputManager input_parser = new InputManager(args, ctx);
 
         String method = input_parser.getMethod();
         List<BoolExpr> constraints = input_parser.getConstraints();
@@ -41,21 +41,21 @@ public class Main {
             pc.computeTestCases();
             test_cases = pc.getTestCases();
         }
-        exportTestCases(test_cases, buildOutputPath(args[0]));
+        exportTestCases(test_cases, buildOutputPath(args[0], method));
     }
 
-    private static String buildOutputPath(String input_path) {
+    private static String buildOutputPath(String input_path, String method) {
         String output_path = "output/";
         int dot_index = input_path.lastIndexOf(".");
         int slash_index = input_path.lastIndexOf("/");
         int backslash_index = input_path.lastIndexOf("\\");
 
         if (dot_index != -1 && slash_index != -1 && slash_index < dot_index)
-            output_path += input_path.substring(slash_index + 1, dot_index) + CSV;
+            output_path += input_path.substring(slash_index + 1, dot_index) + "_" + method + CSV;
         else if (dot_index != -1 && backslash_index != -1 && backslash_index < dot_index)
-            output_path += input_path.substring(backslash_index + 1, dot_index) + CSV;
+            output_path += input_path.substring(backslash_index + 1, dot_index) + "_" + method + CSV;
         else if (dot_index != -1)
-            output_path += input_path.substring(0, dot_index) + CSV;
+            output_path += input_path.substring(0, dot_index) + "_" + method + CSV;
         else {
             System.out.println("Error during creation of output path.");
             System.exit(-1);
@@ -90,9 +90,9 @@ public class Main {
             }
 
             file.close();
+            System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test cases.");
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             e.printStackTrace();
         }
     }

@@ -19,7 +19,7 @@ import java.util.Objects;
  * @version 1.0
  */
 
-public class InputParser {
+public class InputManager {
     private String file_path;
     private String method;
     private boolean all_solutions;
@@ -36,7 +36,7 @@ public class InputParser {
     private final ArrayList<IntExpr> input_variables;
 
 
-    public InputParser(String[] args, Context ctx) {
+    public InputManager(String[] args, Context ctx) {
         if (!checkCommandLineArguments(args)) {
             System.out.println("""
                     Wrong usage!
@@ -132,7 +132,5 @@ public class InputParser {
         return this.method;
     }
 
-    public String getDeclarations() {
-        return this.declarations;
-    }
+    public String getDeclarations() { return this.declarations; }
 }
