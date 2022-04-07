@@ -1,7 +1,4 @@
-import com.microsoft.z3.BoolExpr;
-import com.microsoft.z3.Context;
-import com.microsoft.z3.IntExpr;
-import com.microsoft.z3.Z3Exception;
+import com.microsoft.z3.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,7 +30,7 @@ public class InputManager {
 
     private String declarations;
     private final ArrayList<BoolExpr> constraints;
-    private final ArrayList<IntExpr> input_variables;
+    private final ArrayList<Expr<?>> input_variables;
 
 
     public InputManager(String[] args, Context ctx) {
@@ -88,13 +85,13 @@ public class InputManager {
         return input_constraints;
     }
 
-    private ArrayList<IntExpr> extractInputVariables(ArrayList<BoolExpr> constraints) {
-        ArrayList<IntExpr> vars = new ArrayList<>();
+    private ArrayList<Expr<?>> extractInputVariables(ArrayList<BoolExpr> constraints) {
+        ArrayList<Expr<?>> vars = new ArrayList<>();
         Iterator<BoolExpr> it = constraints.iterator();
         while (it.hasNext()) {
             BoolExpr b_expr = it.next();
             if (!(b_expr.isOr() && b_expr.getNumArgs() > 0 && b_expr.getArgs()[0].toString().startsWith(ABNORMAL))) {
-                vars.add((IntExpr) b_expr.getArgs()[0]);
+                vars.add(b_expr.getArgs()[0]);
                 it.remove();
             }
             else { break; }
@@ -112,7 +109,7 @@ public class InputManager {
         return this.constraints;
     }
 
-    public ArrayList<IntExpr> getInputVariables() {
+    public ArrayList<Expr<?>> getInputVariables() {
         return this.input_variables;
     }
 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 public class PathCoverage extends AbstractCoverageProperty {
-    public PathCoverage(Context ctx, List<BoolExpr> constraints, List<IntExpr> input_variables, boolean all_solutions, int min, int max) {
+    public PathCoverage(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables, boolean all_solutions, int min, int max) {
         super(ctx, constraints, input_variables, all_solutions, min, max);
     }
 
@@ -27,21 +27,24 @@ public class PathCoverage extends AbstractCoverageProperty {
         while (solver.check() == Status.SATISFIABLE) {
             Model model = solver.getModel();
 
-            HashMap<String, Expr> sat_model = new HashMap<>();
-            for (FuncDecl cd : model.getConstDecls()) {
+            HashMap<String, Expr<?>> sat_model = new HashMap<>();
+            for (FuncDecl<?> cd : model.getConstDecls()) {
                 sat_model.put(cd.getName().toString(), model.getConstInterp(cd));
             }
             List<BoolExpr> negated_assignments = new ArrayList<>();
             List<String> stored_model = new ArrayList<>();
 
-            for (Map.Entry<String, Expr> entry : sat_model.entrySet()) {
+            for (Map.Entry<String, Expr<?>> entry : sat_model.entrySet()) {
                 if (entry.getKey().startsWith(TEMP)) {
                     BoolExpr condition = (BoolExpr) ctx.mkConst(entry.getKey(), ctx.mkBoolSort());
                     BoolExpr negated_assignment = ctx.mkNot(ctx.mkEq(condition, entry.getValue()));
                     negated_assignments.add(negated_assignment);
+                    System.out.print("added negated assignment: ");
+                    System.out.println(negated_assignment.toString());
                 }
             }
-            for (IntExpr iv : input_variables) {
+            System.out.println("-----------------------");
+            for (Expr<?> iv : input_variables) {
                 stored_model.add(sat_model.get(iv.toString()).toString());
             }
 

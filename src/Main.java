@@ -15,16 +15,15 @@ public class Main {
     private static final String PATH_COVERAGE = "pc";
     private static final String CSV = ".csv";
 
-    private static final HashMap<String, String> cfg = new HashMap<>();
-    private static final Context ctx = new Context(cfg);
-
     public static void main(String[] args) {
+        HashMap<String, String> cfg = new HashMap<>();
+        Context ctx = new Context(cfg);
 
         InputManager input_parser = new InputManager(args, ctx);
 
         String method = input_parser.getMethod();
         List<BoolExpr> constraints = input_parser.getConstraints();
-        List<IntExpr> input_variables = input_parser.getInputVariables();
+        List<Expr<?>> input_variables = input_parser.getInputVariables();
         boolean restrict_values = input_parser.getAllSolutions();
         int min = input_parser.getMinValue();
         int max = input_parser.getMaxValue();
