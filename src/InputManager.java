@@ -12,7 +12,6 @@ import java.util.Objects;
  * The InputManager class is responsible for parsing the input, extracting the input variables of the initial java
  * program, extracting the constraints computed by Modelinho and make them accessible for test case computation.
  *
- * @author  Florian Pötz
  */
 
 public class InputManager {

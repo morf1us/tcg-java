@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Abstract class providing necessary functionalities used by all coverage property child classes.
  *
- * @author  Florian Pötz
  */
 
 abstract class AbstractCoverageProperty {

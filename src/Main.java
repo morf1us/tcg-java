@@ -6,7 +6,6 @@ import com.microsoft.z3.*;
  * The Main class creates an InputManager objects and according to the user specification creates the respective
  * coverage property object, initiates the computation of test cases, prints them and finally exports them, if desired.
  *
- * @author  Florian Pötz
  */
 
 public class Main {

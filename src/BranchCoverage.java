@@ -6,7 +6,6 @@ import java.util.*;
  * This class implements the computation of test cases fulfilling the branch coverage criterion, i.e. the computed
  * test cases will visit each possible branch in the program at least once.
  *
- * @author  Florian Pötz
  */
 
 public class BranchCoverage extends AbstractCoverageProperty {

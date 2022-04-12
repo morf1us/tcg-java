@@ -9,7 +9,6 @@ import java.util.Map;
  * This class implements the computation of test cases fulfilling the path coverage criterion, i.e. the computed
  * test cases will visit all possible paths in the program at least once.
  *
- * @author  Florian Pötz
  */
 
 public class PathCoverage extends AbstractCoverageProperty {
