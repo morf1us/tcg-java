@@ -1,15 +1,21 @@
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.Expr;
 import com.microsoft.z3.IntExpr;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class providing necessary functionalities used by all coverage property child classes.
+ *
+ * @author  Florian Pötz
+ */
 
 abstract class AbstractCoverageProperty {
     protected Context ctx;
     protected List<BoolExpr> constraints;
-    protected List<IntExpr> input_variables;
+    protected List<Expr<?>> input_variables;
     protected List<List<String>> test_cases;
     protected boolean restrict_values;
     protected int min;
@@ -19,21 +25,18 @@ abstract class AbstractCoverageProperty {
     protected static final String OBJECTIVE = "objective";
     protected static final String TEMP = "temp_";
 
-    public AbstractCoverageProperty(Context ctx, List<BoolExpr> constraints, List<IntExpr> input_variables, boolean restrict_values, int min, int max) {
+    public AbstractCoverageProperty(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables) {
         this.ctx = ctx;
         this.constraints = new ArrayList<>(constraints);
         this.input_variables = new ArrayList<>(input_variables);
         this.test_cases = new ArrayList<>();
-        this.restrict_values = restrict_values;
-        this.min = min;
-        this.max = max;
 
         prepareTestCases();
     }
 
     protected void prepareTestCases() {
         List<String> vars = new ArrayList<>();
-        for (IntExpr iv : this.input_variables) {
+        for (Expr<?> iv : this.input_variables) {
             String v = iv.toString();
             int i = v.lastIndexOf("_");
             vars.add(v.substring(0, i));
@@ -42,9 +45,9 @@ abstract class AbstractCoverageProperty {
     }
 
     protected void addValueRangeConstraints() {
-        for (IntExpr e : this.input_variables) {
-            BoolExpr ge = this.ctx.mkGe(e, ctx.mkInt(this.min));
-            BoolExpr le = this.ctx.mkLe(e, ctx.mkInt(this.max));
+        for (Expr<?> e : this.input_variables) {
+            BoolExpr ge = this.ctx.mkGe((IntExpr) e, ctx.mkInt(this.min));
+            BoolExpr le = this.ctx.mkLe((IntExpr) e, ctx.mkInt(this.max));
             BoolExpr and = this.ctx.mkAnd(ge, le);
             this.constraints.add(and);
         }
