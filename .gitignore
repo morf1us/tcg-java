@@ -25,5 +25,5 @@ hs_err_pid*
 .idea/
 out
 *.iml
-output/*
-!output/.gitkeep
+outputfiles/*
+!outputfiles/.gitkeep
