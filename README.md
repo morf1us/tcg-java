@@ -5,7 +5,7 @@ TCGenerator is a tool to compute test cases covering different coverage properti
 # Usage
 
 The tool expects 3 command line parameters:
-1. **PATH**: path of input file (`*.smt2`)
+1. **PATH**: path of `.smt2` input file
 2. **COVERAGE PROPERTY**: desired coverage property, e.g. `bc` for branch coverage, `pc` for path coverage
 3. **EXPORT**: specifies whether the test cases should also be exported to a `*.csv` file in addition to printing them as per default. `1` for export, `0` to avoid export
 
