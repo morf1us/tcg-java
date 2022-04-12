@@ -40,17 +40,17 @@ public class Main {
 
     private static String buildOutputPath(String input_path, String method) {
         String CSV = ".csv";
-        String output_path = "output/";
+        String output_path = "outputfiles";
         int dot_index = input_path.lastIndexOf(".");
         int slash_index = input_path.lastIndexOf("/");
         int backslash_index = input_path.lastIndexOf("\\");
 
         if (dot_index != -1 && slash_index != -1 && slash_index < dot_index)
-            output_path += input_path.substring(slash_index + 1, dot_index) + "_" + method + CSV;
+            output_path += "/" + input_path.substring(slash_index + 1, dot_index) + "_" + method + CSV;
         else if (dot_index != -1 && backslash_index != -1 && backslash_index < dot_index)
-            output_path += input_path.substring(backslash_index + 1, dot_index) + "_" + method + CSV;
+            output_path += "\\" + input_path.substring(backslash_index + 1, dot_index) + "_" + method + CSV;
         else if (dot_index != -1)
-            output_path += input_path.substring(0, dot_index) + "_" + method + CSV;
+            output_path += "/" + input_path.substring(0, dot_index) + "_" + method + CSV;
         else {
             System.out.println("Error during creation of output path.");
             System.exit(-1);
