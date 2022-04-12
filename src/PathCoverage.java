@@ -5,10 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class implements the computation of test cases fulfilling the path coverage criterion, i.e. the computed
+ * test cases will visit all possible paths in the program at least once.
+ *
+ * @author  Florian Pötz
+ */
 
 public class PathCoverage extends AbstractCoverageProperty {
-    public PathCoverage(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables, boolean all_solutions, int min, int max) {
-        super(ctx, constraints, input_variables, all_solutions, min, max);
+    public PathCoverage(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables) {
+        super(ctx, constraints, input_variables);
     }
 
     public void computeTestCases() {
@@ -39,14 +45,16 @@ public class PathCoverage extends AbstractCoverageProperty {
                     BoolExpr condition = (BoolExpr) ctx.mkConst(entry.getKey(), ctx.mkBoolSort());
                     BoolExpr negated_assignment = ctx.mkNot(ctx.mkEq(condition, entry.getValue()));
                     negated_assignments.add(negated_assignment);
-                    System.out.print("added negated assignment: ");
-                    System.out.println(negated_assignment.toString());
                 }
             }
-            System.out.println("-----------------------");
             for (Expr<?> iv : input_variables) {
                 stored_model.add(sat_model.get(iv.toString()).toString());
             }
+            // store temp assignments for testing
+            /*for (Map.Entry<String, Expr<?>> entry : sat_model.entrySet()) {
+                if (entry.getKey().startsWith(TEMP))
+                    stored_model.add(entry.getKey() + ":" + entry.getValue());
+            }*/
 
             BoolExpr prev_model = ctx.mkOr(negated_assignments.toArray(new BoolExpr[0]));
             solver.add(prev_model);

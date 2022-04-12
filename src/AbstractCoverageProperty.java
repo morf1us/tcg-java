@@ -6,6 +6,11 @@ import com.microsoft.z3.IntExpr;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class providing necessary functionalities used by all coverage property child classes.
+ *
+ * @author  Florian Pötz
+ */
 
 abstract class AbstractCoverageProperty {
     protected Context ctx;
@@ -20,14 +25,11 @@ abstract class AbstractCoverageProperty {
     protected static final String OBJECTIVE = "objective";
     protected static final String TEMP = "temp_";
 
-    public AbstractCoverageProperty(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables, boolean restrict_values, int min, int max) {
+    public AbstractCoverageProperty(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables) {
         this.ctx = ctx;
         this.constraints = new ArrayList<>(constraints);
         this.input_variables = new ArrayList<>(input_variables);
         this.test_cases = new ArrayList<>();
-        this.restrict_values = restrict_values;
-        this.min = min;
-        this.max = max;
 
         prepareTestCases();
     }

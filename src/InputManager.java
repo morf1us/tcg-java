@@ -9,26 +9,21 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * The HelloWorld program implements an application that
- * simply displays "Hello World!" to the standard output.
+ * The InputManager class is responsible for parsing the input, extracting the input variables of the initial java
+ * program, extracting the constraints computed by Modelinho and make them accessible for test case computation.
  *
  * @author  Florian Pötz
- * @version 1.0
  */
 
 public class InputManager {
     private String file_path;
-    private String method;
-    private boolean all_solutions;
-    private int min_value;
-    private int max_value;
+    private String coverage_property;
+    private boolean write_to_file;
 
     private static final String BRANCH_COVERAGE = "bc";
     private static final String PATH_COVERAGE = "pc";
     private static final String ABNORMAL = "ab_";
-    private static final String ASSERT  = "(assert";
 
-    private String declarations;
     private final ArrayList<BoolExpr> constraints;
     private final ArrayList<Expr<?>> input_variables;
 
@@ -37,10 +32,9 @@ public class InputManager {
         if (!checkCommandLineArguments(args)) {
             System.out.println("""
                     Wrong usage!
-                    Correct usage: FILEPATH METHOD MIN_VALUE MAX_VALUE
+                    Correct usage: FILEPATH METHOD EXPORT
                     METHOD: bc | pc
-                    MIN_VALUE (optional): smallest integer used for generating test cases.
-                    MAX_VALUE (optional): largest integer used for generating test cases.""");
+                    EXPORT: 0 | 1""");
             System.exit(0);
         }
         this.constraints = readSMTLIB2File(this.file_path, ctx);
@@ -48,18 +42,19 @@ public class InputManager {
     }
 
     private boolean checkCommandLineArguments(String[] args) {
-        if ((args.length != 2 && args.length != 4) || (!Objects.equals(args[1], BRANCH_COVERAGE) && !Objects.equals(args[1], PATH_COVERAGE))) {
+        if ((args.length != 3) || (!Objects.equals(args[1], BRANCH_COVERAGE) && !Objects.equals(args[1], PATH_COVERAGE))) {
             return false;
         }
         this.file_path = args[0];
-        this.method = args[1];
+        this.coverage_property = args[1];
 
-        if (args.length == 4) {
-            this.min_value = Integer.parseInt(args[2]);
-            this.max_value = Integer.parseInt(args[3]);
-            this.all_solutions = true;
-            return min_value <= max_value;
-        }
+        if (args[2].equals("0"))
+            this.write_to_file = false;
+        else if (args[2].equals("1"))
+            this.write_to_file = true;
+        else
+            return false;
+
         return true;
     }
 
@@ -68,7 +63,6 @@ public class InputManager {
 
         try {
             String file_content = new String(Files.readAllBytes(Paths.get(path)));
-            this.declarations = file_content.substring(0, file_content.indexOf(ASSERT));
 
             try {
                 BoolExpr[] constraints_arr = ctx.parseSMTLIB2String(file_content, null, null, null, null);
@@ -112,22 +106,11 @@ public class InputManager {
     public ArrayList<Expr<?>> getInputVariables() {
         return this.input_variables;
     }
-
-    public int getMinValue() {
-        return this.min_value;
+    public String getCoverageProperty() {
+        return this.coverage_property;
     }
 
-    public int getMaxValue() {
-        return this.max_value;
+    public boolean getWriteToFile() {
+        return this.write_to_file;
     }
-
-    public boolean getAllSolutions() {
-        return this.all_solutions;
-    }
-
-    public String getMethod() {
-        return this.method;
-    }
-
-    public String getDeclarations() { return this.declarations; }
 }

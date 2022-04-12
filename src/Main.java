@@ -3,47 +3,44 @@ import java.util.*;
 import com.microsoft.z3.*;
 
 /**
- * The HelloWorld program implements an application that
- * simply displays "Hello World!" to the standard output.
+ * The Main class creates an InputManager objects and according to the user specification creates the respective
+ * coverage property object, initiates the computation of test cases, prints them and finally exports them, if desired.
  *
  * @author  Florian Pötz
- * @version 1.0
  */
 
 public class Main {
     private static final String BRANCH_COVERAGE = "bc";
     private static final String PATH_COVERAGE = "pc";
-    private static final String CSV = ".csv";
 
     public static void main(String[] args) {
         HashMap<String, String> cfg = new HashMap<>();
         Context ctx = new Context(cfg);
 
-        InputManager input_parser = new InputManager(args, ctx);
+        InputManager input_manager = new InputManager(args, ctx);
 
-        String method = input_parser.getMethod();
-        List<BoolExpr> constraints = input_parser.getConstraints();
-        List<Expr<?>> input_variables = input_parser.getInputVariables();
-        boolean restrict_values = input_parser.getAllSolutions();
-        int min = input_parser.getMinValue();
-        int max = input_parser.getMaxValue();
+        List<BoolExpr> constraints = input_manager.getConstraints();
+        List<Expr<?>> input_variables = input_manager.getInputVariables();
+        String coverage_property = input_manager.getCoverageProperty();
+        boolean write_to_file = input_manager.getWriteToFile();
 
         List<List<String>> test_cases = new ArrayList<>();
 
-        if (method.equals(BRANCH_COVERAGE)) {
-            BranchCoverage bc = new BranchCoverage(ctx, constraints, input_variables, restrict_values, min, max);
+        if (coverage_property.equals(BRANCH_COVERAGE)) {
+            BranchCoverage bc = new BranchCoverage(ctx, constraints, input_variables);
             bc.computeTestCases();
             test_cases = bc.getTestCases();
         }
-        else if (method.equals(PATH_COVERAGE)) {
-            PathCoverage pc = new PathCoverage(ctx, constraints, input_variables, restrict_values, min, max);
+        else if (coverage_property.equals(PATH_COVERAGE)) {
+            PathCoverage pc = new PathCoverage(ctx, constraints, input_variables);
             pc.computeTestCases();
             test_cases = pc.getTestCases();
         }
-        exportTestCases(test_cases, buildOutputPath(args[0], method));
+        exportTestCases(test_cases, buildOutputPath(args[0], coverage_property), write_to_file);
     }
 
     private static String buildOutputPath(String input_path, String method) {
+        String CSV = ".csv";
         String output_path = "output/";
         int dot_index = input_path.lastIndexOf(".");
         int slash_index = input_path.lastIndexOf("/");
@@ -62,7 +59,7 @@ public class Main {
         return output_path;
     }
 
-    private static void exportTestCases(List<List<String>> test_cases, String output_path) {
+    private static void exportTestCases(List<List<String>> test_cases, String output_path, boolean write_to_file) {
         for (List<String> tc_list : test_cases) {
             if (!tc_list.isEmpty()) {
                 System.out.print(tc_list.get(0));
@@ -72,27 +69,32 @@ public class Main {
             }
             System.out.println();
         }
-        FileWriter file;
-        String delimiter = ";";
-        String separator = "\n";
 
-        try {
-            file = new FileWriter(output_path, false);
-            for (int i = 0; i < test_cases.size(); i++) {
-                for (int j = 0; j < test_cases.get(i).size(); j++) {
-                    file.append(test_cases.get(i).get(j));
-                    if (j != test_cases.get(i).size() - 1)
-                        file.append(delimiter);
+        if (write_to_file) {
+            FileWriter file;
+            String delimiter = ";";
+            String separator = "\n";
+
+            try {
+                file = new FileWriter(output_path, false);
+                for (int i = 0; i < test_cases.size(); i++) {
+                    for (int j = 0; j < test_cases.get(i).size(); j++) {
+                        file.append(test_cases.get(i).get(j));
+                        if (j != test_cases.get(i).size() - 1)
+                            file.append(delimiter);
+                    }
+                    if (i != test_cases.size() - 1)
+                        file.append(separator);
                 }
-                if (i != test_cases.size() - 1)
-                    file.append(separator);
-            }
 
-            file.close();
-            System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test cases.");
+                file.close();
+                System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test cases.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        catch(Exception e) {
-            e.printStackTrace();
+        else {
+            System.out.println("Successfully computed " + (test_cases.size() - 1) + " test cases.");
         }
     }
 }

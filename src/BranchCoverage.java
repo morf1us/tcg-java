@@ -2,11 +2,18 @@ import com.microsoft.z3.*;
 
 import java.util.*;
 
+/**
+ * This class implements the computation of test cases fulfilling the branch coverage criterion, i.e. the computed
+ * test cases will visit each possible branch in the program at least once.
+ *
+ * @author  Florian Pötz
+ */
+
 public class BranchCoverage extends AbstractCoverageProperty {
     private final HashSet<String> relevant_branches;
 
-    public BranchCoverage(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables, boolean all_solutions, int min, int max) {
-        super(ctx, constraints, input_variables, all_solutions, min, max);
+    public BranchCoverage(Context ctx, List<BoolExpr> constraints, List<Expr<?>> input_variables) {
+        super(ctx, constraints, input_variables);
         relevant_branches = new HashSet<>();
     }
 
