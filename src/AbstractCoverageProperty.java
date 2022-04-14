@@ -70,6 +70,16 @@ abstract class AbstractCoverageProperty {
         }
     }
 
+    protected String generateGenericInputValue(Expr<?> iv) {
+        if (iv.isBool()) {
+            return "true";
+        }
+        if (iv.isInt()) {
+            return "0";
+        }
+        return "";
+    }
+
     public List<List<String>> getTestCases() { return this.test_cases; }
     abstract void computeTestCases();
 }

@@ -64,7 +64,12 @@ public class BranchCoverage extends AbstractCoverageProperty {
                 }
             }
             for (Expr<?> iv : input_variables) {
-                stored_model.add(sat_model.get(iv.toString()).toString());
+                if (sat_model.get(iv.toString()) != null) {
+                    stored_model.add(sat_model.get(iv.toString()).toString());
+                }
+                else { // input variable doesn't have any influence on branches/paths, so generate generic value
+                    stored_model.add(generateGenericInputValue(iv));
+                }
             }
 
             BoolExpr prev_model = ctx.mkOr(negated_assignments.toArray(new BoolExpr[0]));

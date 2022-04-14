@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Objects;
 
 /**
  * The InputManager class is responsible for parsing the input, extracting the input variables of the initial java
@@ -21,6 +20,7 @@ public class InputManager {
 
     private static final String BRANCH_COVERAGE = "bc";
     private static final String PATH_COVERAGE = "pc";
+    private static final String EXPORT = "-export";
     private static final String ABNORMAL = "ab_";
 
     private final ArrayList<BoolExpr> constraints;
@@ -32,8 +32,9 @@ public class InputManager {
             System.out.println("""
                     Wrong usage!
                     Correct usage: FILEPATH METHOD EXPORT
+                    FILEPATH: path to .smt2 input file
                     METHOD: bc | pc
-                    EXPORT: 0 | 1""");
+                    EXPORT (optional): -export""");
             System.exit(0);
         }
         this.constraints = readSMTLIB2File(this.file_path, ctx);
@@ -41,18 +42,21 @@ public class InputManager {
     }
 
     private boolean checkCommandLineArguments(String[] args) {
-        if ((args.length != 3) || (!Objects.equals(args[1], BRANCH_COVERAGE) && !Objects.equals(args[1], PATH_COVERAGE))) {
+        if ((args.length != 2 && args.length != 3) || (!args[1].equals(BRANCH_COVERAGE) && !args[1].equals(PATH_COVERAGE))) {
             return false;
         }
         this.file_path = args[0];
         this.coverage_property = args[1];
 
-        if (args[2].equals("0"))
+        if (args.length == 3) {
+            if (args[2].equals(EXPORT))
+                this.write_to_file = true;
+            else
+                return false;
+        }
+        else {
             this.write_to_file = false;
-        else if (args[2].equals("1"))
-            this.write_to_file = true;
-        else
-            return false;
+        }
 
         return true;
     }

@@ -35,7 +35,7 @@ public class Main {
             pc.computeTestCases();
             test_cases = pc.getTestCases();
         }
-        exportTestCases(test_cases, buildOutputPath(args[0], coverage_property), write_to_file);
+        exportTestCases(test_cases, buildOutputPath(args[0], coverage_property), write_to_file, coverage_property);
     }
 
     private static String buildOutputPath(String input_path, String method) {
@@ -58,7 +58,13 @@ public class Main {
         return output_path;
     }
 
-    private static void exportTestCases(List<List<String>> test_cases, String output_path, boolean write_to_file) {
+    private static void exportTestCases(List<List<String>> test_cases, String output_path, boolean write_to_file, String coverage_property) {
+        String c_prop = "";
+        if (coverage_property.equals(BRANCH_COVERAGE))
+            c_prop = "Branch Coverage";
+        else if (coverage_property.equals(PATH_COVERAGE))
+            c_prop = "Path Coverage";
+
         for (List<String> tc_list : test_cases) {
             if (!tc_list.isEmpty()) {
                 System.out.print(tc_list.get(0));
@@ -87,13 +93,13 @@ public class Main {
                 }
 
                 file.close();
-                System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test cases.");
+                System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test cases covering " + c_prop + ".");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else {
-            System.out.println("Successfully computed " + (test_cases.size() - 1) + " test cases.");
+            System.out.println("Successfully computed " + (test_cases.size() - 1) + " test cases covering " + c_prop + ".");
         }
     }
 }

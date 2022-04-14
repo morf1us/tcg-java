@@ -47,7 +47,12 @@ public class PathCoverage extends AbstractCoverageProperty {
                 }
             }
             for (Expr<?> iv : input_variables) {
-                stored_model.add(sat_model.get(iv.toString()).toString());
+                if (sat_model.get(iv.toString()) != null) {
+                    stored_model.add(sat_model.get(iv.toString()).toString());
+                }
+                else { // input variable doesn't have any influence on branches/paths, so generate generic value
+                    stored_model.add(generateGenericInputValue(iv));
+                }
             }
             // store temp assignments for testing
             /*for (Map.Entry<String, Expr<?>> entry : sat_model.entrySet()) {
