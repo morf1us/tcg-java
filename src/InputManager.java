@@ -18,8 +18,8 @@ public class InputManager {
     private String coverage_property;
     private boolean write_to_file;
 
-    private static final String BRANCH_COVERAGE = "bc";
-    private static final String PATH_COVERAGE = "pc";
+    private static final String BRANCH_COVERAGE = "-bc";
+    private static final String PATH_COVERAGE = "-pc";
     private static final String EXPORT = "-export";
     private static final String ABNORMAL = "ab_";
 
@@ -33,7 +33,7 @@ public class InputManager {
                     Wrong usage!
                     Correct usage: FILEPATH METHOD EXPORT
                     FILEPATH: path to .smt2 input file
-                    METHOD: bc | pc
+                    METHOD: -bc | -pc
                     EXPORT (optional): -export""");
             System.exit(0);
         }

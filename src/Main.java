@@ -9,8 +9,8 @@ import com.microsoft.z3.*;
  */
 
 public class Main {
-    private static final String BRANCH_COVERAGE = "bc";
-    private static final String PATH_COVERAGE = "pc";
+    private static final String BRANCH_COVERAGE = "-bc";
+    private static final String PATH_COVERAGE = "-pc";
 
     public static void main(String[] args) {
         HashMap<String, String> cfg = new HashMap<>();
@@ -93,13 +93,13 @@ public class Main {
                 }
 
                 file.close();
-                System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test cases covering " + c_prop + ".");
+                System.out.println("Successfully computed and exported " + (test_cases.size() - 1) + " test case(s) covering " + c_prop + ".");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else {
-            System.out.println("Successfully computed " + (test_cases.size() - 1) + " test cases covering " + c_prop + ".");
+            System.out.println("Successfully computed " + (test_cases.size() - 1) + " test case(s) covering " + c_prop + ".");
         }
     }
 }
