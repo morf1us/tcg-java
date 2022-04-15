@@ -1,7 +1,6 @@
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
-import com.microsoft.z3.IntExpr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +15,6 @@ abstract class AbstractCoverageProperty {
     protected List<BoolExpr> constraints;
     protected List<Expr<?>> input_variables;
     protected List<List<String>> test_cases;
-    protected boolean restrict_values;
-    protected int min;
-    protected int max;
 
     protected static final String ABNORMAL = "ab_";
     protected static final String OBJECTIVE = "objective";
@@ -41,15 +37,6 @@ abstract class AbstractCoverageProperty {
             vars.add(v.substring(0, i));
         }
         this.test_cases.add(vars);
-    }
-
-    protected void addValueRangeConstraints() {
-        for (Expr<?> e : this.input_variables) {
-            BoolExpr ge = this.ctx.mkGe((IntExpr) e, ctx.mkInt(this.min));
-            BoolExpr le = this.ctx.mkLe((IntExpr) e, ctx.mkInt(this.max));
-            BoolExpr and = this.ctx.mkAnd(ge, le);
-            this.constraints.add(and);
-        }
     }
 
     protected void removeObjective() {
@@ -81,5 +68,6 @@ abstract class AbstractCoverageProperty {
     }
 
     public List<List<String>> getTestCases() { return this.test_cases; }
+
     abstract void computeTestCases();
 }

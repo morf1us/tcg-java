@@ -37,8 +37,6 @@ public class BranchCoverage extends AbstractCoverageProperty {
         // prepare constraints
         removeObjective();
         removeABs();
-        if (restrict_values)
-            addValueRangeConstraints();
 
         // prepare solver
         Solver solver = ctx.mkSolver();
